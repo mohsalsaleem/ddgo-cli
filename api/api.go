@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -33,7 +32,6 @@ func Search(com *command.Command) (string, error) {
 	}
 
 	defer response.Body.Close()
-	fmt.Println(response.StatusCode)
 	bodyBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return "", err
