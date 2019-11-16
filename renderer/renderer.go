@@ -153,8 +153,6 @@ func extractResults(htm string) ([]result, error) {
 		return nil, err
 	}
 
-	utils.WriteStringToFile(utils.HTMLToString(linksNode), "/tmp/ddgo.html")
-
 	results := collectResults(linksNode)
 	return results, nil
 }
