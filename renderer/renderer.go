@@ -166,7 +166,7 @@ func Render(htm string) {
 		fmt.Println(err.Error())
 	}
 	for idx, result := range results {
-		fmt.Printf("\u001b[37m%d. %s\n", (idx + 1), result.title)
+		fmt.Printf("\u001b[1m\u001b[4m%d. %s\u001b[0m\n", (idx + 1), result.title)
 		fmt.Printf("\u001b[34m%s\n", result.url)
 		fmt.Printf("\u001b[37m%s\n", result.desc)
 		fmt.Println("")
