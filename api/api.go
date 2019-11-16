@@ -1,16 +1,45 @@
 package api
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/mohsalsaleem/ddgo-cli/command"
 )
 
 const ddgAPI = "https://duckduckgo.com/html/?q="
 
+func displayProgress(done chan bool, delay time.Duration) {
+
+	var stop bool = false
+
+	for {
+		select {
+		case <-done:
+			fmt.Fprint(os.Stdout, "\r \r")
+			stop = true
+		default:
+			fmt.Printf("\r\u001b[36mLoading...\u001b[0m")
+		}
+
+		if stop {
+			break
+		}
+
+		time.Sleep(delay)
+	}
+}
+
 // Search - function to search duckduckgo
 func Search(com *command.Command) (string, error) {
+
+	done := make(chan bool)
+
+	go displayProgress(done, 5*time.Millisecond)
+
 	var url string = ddgAPI + com.QueryString
 
 	client := http.Client{}
@@ -37,5 +66,8 @@ func Search(com *command.Command) (string, error) {
 		return "", err
 	}
 	bodyString := string(bodyBytes)
+
+	done <- true
+
 	return bodyString, nil
 }

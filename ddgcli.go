@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/mohsalsaleem/ddgo-cli/api"
@@ -13,11 +13,11 @@ import (
 func main() {
 	com, err := command.Parse(os.Args)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
 	}
 	html, err := api.Search(com)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
 	}
 	renderer.Render(html)
 }
