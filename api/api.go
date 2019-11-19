@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"time"
 
@@ -12,7 +13,7 @@ import (
 
 const ddgAPI = "https://duckduckgo.com/html/?q="
 
-func displayProgress(done chan bool, delay time.Duration) {
+func displayProgress(done chan bool, queryString string, delay time.Duration) {
 
 	var stop bool = false
 
@@ -22,7 +23,7 @@ func displayProgress(done chan bool, delay time.Duration) {
 			fmt.Fprint(os.Stdout, "\r \r")
 			stop = true
 		default:
-			fmt.Printf("\r\u001b[36mLoading...\u001b[0m")
+			fmt.Printf("\r\u001b[36mSearching - '%s'\u001b[0m", queryString)
 		}
 
 		if stop {
@@ -38,9 +39,9 @@ func Search(com *command.Command) (string, error) {
 
 	done := make(chan bool)
 
-	go displayProgress(done, 5*time.Millisecond)
+	go displayProgress(done, com.QueryString, 5*time.Millisecond)
 
-	var url string = ddgAPI + com.QueryString
+	var url string = ddgAPI + url.QueryEscape(com.QueryString)
 
 	client := http.Client{}
 	request, _ := http.NewRequest("GET", url, nil)

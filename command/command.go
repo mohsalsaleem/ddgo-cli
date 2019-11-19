@@ -1,8 +1,7 @@
 package command
 
 import (
-	"errors"
-	"net/url"
+	"flag"
 )
 
 // Command - Command structure
@@ -11,15 +10,13 @@ type Command struct {
 	IgnoreCache bool
 }
 
-// Parse - Parse the command line arguments
-func Parse(args []string) (*Command, error) {
-	if len(args) < 2 {
-		return nil, errors.New("Wrong number of arguments. Example: ddgo-cli \"What is github.com?\"")
-	}
+// Parse - Parse the cli arguments
+func Parse() (*Command, error) {
+	query := flag.String("q", "", "Enter a query: Example: ddgo-cli -q=\"What is github.com?\"")
+	ignoreCache := flag.Bool("f", false, "Example: ddgo-cli -q=\"What is github.com?\" -f")
+	flag.Parse()
 	command := Command{}
-	command.QueryString = url.QueryEscape(args[1])
-	if len(args) > 2 && (args[2] == "--ignore-cache" || args[2] == "-ic") {
-		command.IgnoreCache = true
-	}
+	command.QueryString = *query
+	command.IgnoreCache = *ignoreCache
 	return &command, nil
 }
